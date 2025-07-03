@@ -69,6 +69,8 @@ try:
             except Exception as e:
                 pass
             sys.exit(1)
+except:
+    print("Unable to run")
 
 
 
