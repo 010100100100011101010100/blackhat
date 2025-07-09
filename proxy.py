@@ -92,3 +92,41 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+# ┌────────────┐       ┌────────────┐       ┌───────────────┐
+# │   Client   │       │   Proxy    │       │ Remote Server │
+# └────┬───────┘       └────┬───────┘       └──────┬────────┘
+#      │ Connects to        │                        │
+#      │ local_host:port    │                        │
+#      │───────────────────▶│                        │
+#      │                    │ Accept connection      │
+#      │                    │ Start proxy_handler    │
+#      │                    │                        │
+#      │                    │ Connect to remote_host │
+#      │                    │───────────────────────▶│
+#      │                    │                        │
+#      │                    │ [Receive greeting?]    │
+#      │                    │◀───────────────────────│
+#      │                    │ Send to client         │
+#      │◀───────────────────│                        │
+#      │                    │                        │
+#      │ Send data          │                        │
+#      │───────────────────▶│                        │
+#      │                    │ Receive from client    │
+#      │                    │ Send to remote         │
+#      │                    │───────────────────────▶│
+#      │                    │                        │
+#      │                    │ Receive from remote    │
+#      │                    │◀───────────────────────│
+#      │                    │ Send to client         │
+#      │◀───────────────────│                        │
+#      │                    │ Repeat loop            │
+#      │                    │                        │
+#      │ (disconnects)      │                        │
+#      │───────────────────┐│                        │
+#      │                    │                        │
+#      │                    │ Close both connections │
+#      │                    │───────────────────────▶│
+#      │                    │ Done                   │

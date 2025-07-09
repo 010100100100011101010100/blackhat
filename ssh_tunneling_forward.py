@@ -201,3 +201,46 @@ if __name__=="__main__":
 #Transport and Channel are two communication methods in paramiko.
 #Transport is used to establish and maintain connection
 #Channel is used to send and receive data over the established connection (like a sockets)
+
+
+
+# ┌────────────┐   ┌──────────────┐   ┌──────────────┐   ┌────────────┐   ┌────────────────┐
+# │  Operator  │   │ SSH Client   │   │ SSH Server   │   │ Remote Host│   │ Forwarded Client│
+# └────┬───────┘   └─────┬────────┘   └─────┬────────┘   └────┬───────┘   └────────┬───────┘
+#      │                 │                  │                  │                    │
+#      │ Run Script      │                  │                  │                    │
+#      │────────────────▶│                  │                  │                    │
+#      │                 │ Connect to SSH   │                  │                    │
+#      │                 │─────────────────▶│                  │                    │
+#      │                 │ SSH Auth/Keys    │                  │                    │
+#      │                 │─────────────────▶│                  │                    │
+#      │                 │ Establish tunnel │                  │                    │
+#      │                 │─────────────────▶│                  │                    │
+#      │                 │ Request port fwd │                  │                    │
+#      │                 │◀─────────────────│                  │                    │
+#      │                 │ Start loop       │                  │                    │
+#      │                 │ Accept channels  │                  │                    │
+#      │                 │◀─────────────────│                  │                    │
+#      │                 │                  │                  │                    │
+#      │                 │ Spawn thread     │                  │                    │
+#      │                 │ to handle conn   │                  │                    │
+#      │                 │────────────────▶│                  │                    │
+#      │                 │                  │                  │                    │
+#      │                 │                  │ New connection   │                    │
+#      │                 │                  │◀──────────────────────────────────────│
+#      │                 │                  │ Accepts connection                    │
+#      │                 │                  │ Spawns new channel                    │
+#      │                 │                  │────────────┐                          │
+#      │                 │ Channel.open()  ◀──────────────┘                          │
+#      │                 │ Forward data <──────────────────────────────┐            │
+#      │                 │────────────────▶│                            │            │
+#      │                 │ Data -> Remote  ────────────────────────────▶│            │
+#      │                 │                 │                            │            │
+#      │                 │ Data <- Remote  ◀───────────────────────────┘            │
+#      │                 │ Forward to chan ◀────────────────────────────────────────┘
+#      │                 │ (loop continues)                                           
+#      │                 │                                                           
+#      │                 │ Tunnel closes when connection ends                         
+#      │                 │────────────────▶                                          
+#      │                 │ Thread exits                                              
+#      │◀────────────────┘                                                           

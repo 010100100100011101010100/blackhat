@@ -75,5 +75,36 @@ except:
 
 
 
+# ┌────────────┐          ┌──────────┐          ┌───────────────┐        ┌─────────────┐
+# │  Operator  │          │  Socket  │          │ Paramiko SSH  │        │  Client SSH │
+# └────┬───────┘          └────┬─────┘          └────┬──────────┘        └────┬────────┘
+#      │                        │                     │                          │
+#      │ Run script             │                     │                          │
+#      │ host, port             │                     │                          │
+#      │──────────────────────▶│                     │                          │
+#      │                        │ Create TCP socket   │                          │
+#      │                        │ Bind, listen        │                          │
+#      │                        │ Accept connection ◀───────────────────────────┘
+#      │                        │                     │
+#      │                        │ Pass socket to ─────▶ Paramiko.Transport()
+#      │                        │                     │
+#      │                        │                     │ Start SSH negotiation
+#      │                        │                     │ Add host key
+#      │                        │                     │ Accept credentials ◀───┐
+#      │                        │                     │                       │
+#      │                        │                     │ Check username/pass  │
+#      │                        │                     │ if valid → success   │
+#      │                        │                     └─────────────┬────────┘
+#      │                        │ Create SSH Channel  ◀──────────────┘
+#      │                        │ Send welcome msg    ▶ Channel
+#      │                        │                     │
+#      │ Enter commands         │                     │
+#      │────────────────────────▶ Send command       ▶│
+#      │                        │                     │
+#      │                        │  (loop continues)   │
+#      │                        │ if "exit" → close   │
+#      │                        │                     │
+#      │ Ctrl+C or error        │ Close connection    │
+#      │────────────────────────▶ Cleanup & exit      │
 
 

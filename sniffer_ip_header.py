@@ -31,8 +31,6 @@ class IPHeader(Structure):
             self.protocol=self.protocol_mapping[self.protocol_num]
         except:
             return None
-
-
 if os.name=="nt":
     socket_protocol=socket.IPPROTO_IP
 else:
@@ -56,3 +54,39 @@ except  KeyboardInterrupt:
     print("Exiting Sniffer")
 
 
+#    ┌──────────────┐
+#    │   Start      │
+#    └─────┬────────┘
+#          │
+#          ▼
+# ┌────────────────────┐
+# │  Import Libraries  │
+# └────────┬───────────┘
+#          ▼
+# ┌────────────────────────────┐
+# │  Define IPHeader Structure │
+# └────────┬───────────────────┘
+#          ▼
+# ┌─────────────────────────────┐
+# │ Choose Protocol (OS Check) │
+# └────────┬────────────────────┘
+#          ▼
+# ┌─────────────────────────────┐
+# │ Create Raw Socket & Bind IP │
+# └────────┬────────────────────┘
+#          ▼
+# ┌──────────────────────────────┐
+# │ Enable Promiscuous Mode (Win)│
+# └────────┬─────────────────────┘
+#          ▼
+# ┌───────────────────────────────┐
+# │ Capture Packet in Loop        │
+# │ ┌──────────────────────────┐  │
+# │ │ Parse Header             │  │
+# │ │ Print Protocol           │  │
+# │ └──────────────────────────┘  │
+# └────────┬──────────────────────┘
+#          ▼
+# ┌─────────────────────────────┐
+# │ Ctrl+C → Stop & Cleanup     │
+# └─────────────────────────────┘

