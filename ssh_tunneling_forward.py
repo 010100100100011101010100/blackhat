@@ -197,3 +197,7 @@ if __name__=="__main__":
 
 
         
+#Some Notes
+#Transport and Channel are two communication methods in paramiko.
+#Transport is used to establish and maintain connection
+#Channel is used to send and receive data over the established connection (like a sockets)
